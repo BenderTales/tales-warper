@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "tales-warper",
+  "version": "${version}",
+  "name": "Tales Warper",
+  "description": "",
+  "authors": [
+    "Nokorbis"
+  ],
+  "contact": {
+    "repo": "https://github.com/BenderTales/tales-warper"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/tales-warper/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "fr.bendertales.mc.taleswarper.TalesWarper"
+    ]
+  },
+  "mixins": [
+    "tales-warper.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "minecraft": "1.19.2"
+  }
+}
