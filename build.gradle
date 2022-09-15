@@ -31,15 +31,20 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "fr.bendertales.mc:tales-server-common:1.19.2-1.0.0+RC"
+    modImplementation "fr.bendertales.mc:tales-server-common:${project.tales_server_common_version}"
 }
 
 processResources {
     inputs.property "version", project.version
     filteringCharset "UTF-8"
 
+    def props = [
+        "tales_server_common_version": project.tales_server_common_version,
+        "version": project.version
+    ]
+
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand props
     }
 }
 
