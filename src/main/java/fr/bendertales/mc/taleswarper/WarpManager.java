@@ -57,10 +57,10 @@ public class WarpManager {
 		warpsRepositories.create(warp);
 	}
 
-	public void deleteWarp(String name) throws WarperException {
+	public void deleteWarp(String name) throws WarpNotFoundException {
 		var warp = warpsRepositories.get(name);
 		if (warp == null) {
-			throw new WarperException("This warp does not exist");
+			throw new WarpNotFoundException();
 		}
 		warpsRepositories.remove(warp);
 	}
