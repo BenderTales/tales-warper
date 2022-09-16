@@ -9,8 +9,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import fr.bendertales.mc.talesservercommon.commands.CommandNodeRequirements;
 import fr.bendertales.mc.talesservercommon.commands.TalesCommand;
 import fr.bendertales.mc.talesservercommon.commands.TalesCommandNode;
+import fr.bendertales.mc.talesservercommon.helpers.Perms;
 import fr.bendertales.mc.taleswarper.WarpManager;
+import fr.bendertales.mc.taleswarper.data.Warp;
 import fr.bendertales.mc.taleswarper.exceptions.WarpNotFoundException;
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.EntitySelector;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -60,10 +63,15 @@ public class CmdWarp implements TalesCommandNode, TalesCommand {
 
 		try {
 			var warp = warpManager.getWarp(warpName);
-			for (ServerPlayerEntity player : players) {
-				warpManager.teleport(player, warp);
+			if (hasWarpRight(source, warp)) {
+				for (ServerPlayerEntity player : players) {
+					warpManager.teleport(player, warp);
+				}
+				source.sendFeedback(Text.of("Teleported " + players.size() + " players"), false);
 			}
-			source.sendFeedback(Text.of("Teleported " + players.size() + " players"), false);
+			else {
+				source.sendFeedback(Text.of("You cannot warp to " + warp.getName()), false);
+			}
 		}
 		catch (WarpNotFoundException e) {
 			throw asCommandException(e);
@@ -79,13 +87,24 @@ public class CmdWarp implements TalesCommandNode, TalesCommand {
 
 		try {
 			var warp = warpManager.getWarp(warpName);
-			warpManager.teleport(player, warp);
-			player.sendMessage(Text.of("Teleported to " + warp.getName()), true);
+			if (hasWarpRight(source, warp)) {
+				warpManager.teleport(player, warp);
+				player.sendMessage(Text.of("Teleported to " + warp.getName()), true);
+			}
+			else {
+				player.sendMessage(Text.of("You cannot warp to " + warp.getName()), true);
+			}
 		}
 		catch (WarpNotFoundException e) {
 			throw asCommandException(e);
 		}
 		return 1;
+	}
+
+	private boolean hasWarpRight(CommandSource source, Warp warp) {
+		return source.hasPermissionLevel(2)
+	        || Perms.has(source, "warper.warps.*")
+			|| Perms.has(source, "warper.warps." + warp.getKey());
 	}
 
 	@Override
