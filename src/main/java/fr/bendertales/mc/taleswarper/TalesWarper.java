@@ -11,6 +11,7 @@ public class TalesWarper implements ModInitializer {
 		var warpManager = new WarpManager();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(warpManager::init);
+		ServerLifecycleEvents.SERVER_STARTED.register((s) -> warpManager.load());
 		CommandRegistrar.registerCommands(warpManager);
 	}
 }

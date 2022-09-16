@@ -11,6 +11,7 @@ import fr.bendertales.mc.talesservercommon.commands.TalesCommand;
 import fr.bendertales.mc.talesservercommon.commands.TalesCommandNode;
 import fr.bendertales.mc.talesservercommon.helpers.Perms;
 import fr.bendertales.mc.taleswarper.WarpManager;
+import fr.bendertales.mc.taleswarper.commands.suggestions.AccessibleWarpSuggestionProvider;
 import fr.bendertales.mc.taleswarper.data.Warp;
 import fr.bendertales.mc.taleswarper.exceptions.WarpNotFoundException;
 import net.minecraft.command.CommandSource;
@@ -43,6 +44,7 @@ public class CmdWarp implements TalesCommandNode, TalesCommand {
 		       .requires(requirements.asPredicate())
 		       .then(
 				    argument("warp-name", StringArgumentType.word())
+				    .suggests(new AccessibleWarpSuggestionProvider(warpManager))
 				    .executes(this::warpSelf)
 				    .then(
 						literal("as")

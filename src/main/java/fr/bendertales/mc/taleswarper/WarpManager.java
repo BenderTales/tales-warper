@@ -1,9 +1,7 @@
 package fr.bendertales.mc.taleswarper;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
-import fr.bendertales.mc.taleswarper.data.PlayerWarpData;
 import fr.bendertales.mc.taleswarper.data.Warp;
 import fr.bendertales.mc.taleswarper.data.WarpLocation;
 import fr.bendertales.mc.taleswarper.data.WarpPlayerCache;
@@ -13,6 +11,7 @@ import fr.bendertales.mc.taleswarper.data.persisted.WarpsRepositories;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.Vec3d;
 
 
 public class WarpManager {
@@ -22,7 +21,6 @@ public class WarpManager {
 
 	public void init(MinecraftServer server) {
 		warpsRepositories.setMinecraftServer(server);
-		load();
 	}
 
 	public void reload() {
@@ -30,7 +28,7 @@ public class WarpManager {
 		load();
 	}
 
-	private void load() {
+	public void load() {
 		warpsRepositories.loadAll();
 	}
 
@@ -85,7 +83,15 @@ public class WarpManager {
 	public void teleport(ServerPlayerEntity player, WarpLocation location) {
 		var previousLocation = WarpLocation.from(player);
 
-		FabricDimensions.teleport(player, location.world(), location.asTeleportTarget());
+		var pos = location.position();
+		player.teleport(
+			location.world(),
+			pos.x,
+			pos.y,
+			pos.z,
+			location.yaw(),
+			location.pitch()
+		);
 
 		var warpData = playerCache.getOrCreate(player);
 		warpData.addPreviousLocation(previousLocation);
@@ -96,7 +102,15 @@ public class WarpManager {
 		var optPrevLoc = warpData.getPreviousLocation();
 		if (optPrevLoc.isPresent()) {
 			var previousLocation = optPrevLoc.get();
-			FabricDimensions.teleport(player, previousLocation.world(), previousLocation.asTeleportTarget());
+			var pos = previousLocation.position();
+			player.teleport(
+				previousLocation.world(),
+				pos.x,
+				pos.y,
+				pos.z,
+				previousLocation.yaw(),
+				previousLocation.pitch()
+			);
 			return;
 		}
 		throw new WarperException("Player has no previous location");
