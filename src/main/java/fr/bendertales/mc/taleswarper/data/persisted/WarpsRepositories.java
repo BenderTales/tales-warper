@@ -51,17 +51,19 @@ public class WarpsRepositories extends AAllFileCachedRepository<String, Warp, Wa
 
 	@Override
 	protected Warp transformAfterRead(WarpProperties props) {
-		var worldId = props.getWorld();
+
+		var locProps = props.getLocation();
+		var worldId = locProps.getWorld();
 		var worldKey = RegistryKey.of(Registry.WORLD_KEY, worldId);
 		var world = minecraftServer.getWorld(worldKey);
 
-		var location = new WarpLocation(world, props.getPosition());
+		var warpLoc = new WarpLocation(world, locProps.getPosition(), locProps.getYaw(), locProps.getPitch());
 
 		Warp warp = new Warp();
 
 		warp.setName(props.getName());
 		warp.setCreator(props.getCreator());
-		warp.setWarpLocation(location);
+		warp.setWarpLocation(warpLoc);
 
 		return warp;
 	}
@@ -76,12 +78,16 @@ public class WarpsRepositories extends AAllFileCachedRepository<String, Warp, Wa
 
 		var warpLocation = warp.getWarpLocation();
 
-		WarpProperties properties = new WarpProperties();
+		WarpLocationProperties locationProperties = new WarpLocationProperties();
+		locationProperties.setWorld(warpLocation.world().getRegistryKey().getValue());
+		locationProperties.setPosition(warpLocation.position());
+		locationProperties.setYaw(warpLocation.yaw());
+		locationProperties.setPitch(warpLocation.pitch());
 
+		WarpProperties properties = new WarpProperties();
 		properties.setName(warp.getName());
 		properties.setCreator(warp.getCreator());
-		properties.setPosition(warpLocation.position());
-		properties.setWorld(warpLocation.world().getRegistryKey().getValue());
+		properties.setLocation(locationProperties);
 
 		return properties;
 	}

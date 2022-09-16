@@ -2,12 +2,14 @@ package fr.bendertales.mc.taleswarper;
 
 import java.util.stream.Stream;
 
+import fr.bendertales.mc.taleswarper.data.PlayerWarpData;
 import fr.bendertales.mc.taleswarper.data.Warp;
 import fr.bendertales.mc.taleswarper.data.WarpLocation;
 import fr.bendertales.mc.taleswarper.data.WarpPlayerCache;
 import fr.bendertales.mc.taleswarper.exceptions.WarpNotFoundException;
 import fr.bendertales.mc.taleswarper.exceptions.WarperException;
 import fr.bendertales.mc.taleswarper.data.persisted.WarpsRepositories;
+import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -47,7 +49,7 @@ public class WarpManager {
 			}
 		}
 
-		var warpLocation = new WarpLocation(player.getWorld(), player.getPos());
+		var warpLocation = WarpLocation.from(player);
 
 		warp = new Warp();
 		warp.setName(name);
@@ -71,5 +73,20 @@ public class WarpManager {
 			throw new WarpNotFoundException();
 		}
 		return warp;
+	}
+
+	public void teleport(ServerPlayerEntity player, Warp warp) {
+		var location = warp.getWarpLocation();
+
+		teleport(player, location);
+	}
+
+	private void teleport(ServerPlayerEntity player, WarpLocation location) {
+		var previousLocation = WarpLocation.from(player);
+
+		FabricDimensions.teleport(player, location.world(), location.asTeleportTarget());
+
+		var warpData = playerCache.getOrCreate(player);
+		warpData.addPreviousLocation(previousLocation);
 	}
 }

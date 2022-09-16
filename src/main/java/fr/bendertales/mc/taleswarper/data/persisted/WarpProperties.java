@@ -1,15 +1,11 @@
 package fr.bendertales.mc.taleswarper.data.persisted;
 
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-
 
 public class WarpProperties {
 
 	private String      name;
 	private String      creator;
-	private Identifier  world;
-	private Vec3d       position;
+	private WarpLocationProperties location;
 
 	public String getName() {
 		return name;
@@ -27,19 +23,11 @@ public class WarpProperties {
 		this.creator = creator;
 	}
 
-	public Identifier getWorld() {
-		return world;
+	public WarpLocationProperties getLocation() {
+		return location;
 	}
 
-	public void setWorld(Identifier world) {
-		this.world = world;
-	}
-
-	public Vec3d getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vec3d position) {
-		this.position = position;
+	public void setLocation(WarpLocationProperties location) {
+		this.location = location;
 	}
 }
