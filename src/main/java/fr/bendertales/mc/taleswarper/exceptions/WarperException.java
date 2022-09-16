@@ -1,4 +1,4 @@
-package fr.bendertales.mc.taleswarper.data;
+package fr.bendertales.mc.taleswarper.exceptions;
 
 public class WarperException extends Exception {
 

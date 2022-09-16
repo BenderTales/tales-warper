@@ -1,6 +1,7 @@
 package fr.bendertales.mc.taleswarper.data.persisted;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import fr.bendertales.mc.talesservercommon.repository.ModPaths;
 import fr.bendertales.mc.talesservercommon.repository.data.AAllFileCachedRepository;
@@ -12,6 +13,8 @@ import fr.bendertales.mc.taleswarper.data.WarpLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
+
+import static fr.bendertales.mc.taleswarper.helper.WarpUtils.asKey;
 
 
 public class WarpsRepositories extends AAllFileCachedRepository<String, Warp, WarpProperties> {
@@ -42,6 +45,10 @@ public class WarpsRepositories extends AAllFileCachedRepository<String, Warp, Wa
 		return properties;
 	}
 
+	public Stream<Warp> getAll() {
+		return cachedData.values().stream();
+	}
+
 	@Override
 	protected Warp transformAfterRead(WarpProperties props) {
 		var worldId = props.getWorld();
@@ -57,6 +64,11 @@ public class WarpsRepositories extends AAllFileCachedRepository<String, Warp, Wa
 		warp.setWarpLocation(location);
 
 		return warp;
+	}
+
+	@Override
+	public Warp get(String warpName) {
+		return super.get(asKey(warpName));
 	}
 
 	@Override
@@ -85,7 +97,7 @@ public class WarpsRepositories extends AAllFileCachedRepository<String, Warp, Wa
 	@Override
 	@Deprecated
 	public void save(String s, Warp warp) {
-		var file = dataFolder.resolve(warp.getName() + ".json");
+		var file = dataFolder.resolve(warp.getKey() + ".json");
 		var fileContent = transformBeforeSave(warp);
 		trySaveContent(file, fileContent);
 	}

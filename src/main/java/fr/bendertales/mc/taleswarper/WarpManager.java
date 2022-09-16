@@ -1,9 +1,12 @@
 package fr.bendertales.mc.taleswarper;
 
+import java.util.stream.Stream;
+
 import fr.bendertales.mc.taleswarper.data.Warp;
 import fr.bendertales.mc.taleswarper.data.WarpLocation;
 import fr.bendertales.mc.taleswarper.data.WarpPlayerCache;
-import fr.bendertales.mc.taleswarper.data.WarperException;
+import fr.bendertales.mc.taleswarper.exceptions.WarpNotFoundException;
+import fr.bendertales.mc.taleswarper.exceptions.WarperException;
 import fr.bendertales.mc.taleswarper.data.persisted.WarpsRepositories;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,7 +31,14 @@ public class WarpManager {
 		warpsRepositories.loadAll();
 	}
 
+	public Stream<Warp> getAllWarps() {
+		return warpsRepositories.getAll();
+	}
+
 	public void createWarp(String name, ServerPlayerEntity player, boolean force) throws WarperException {
+		if ("*".equals(name)) {
+			throw new WarperException("* is a forbidden name");
+		}
 		Warp warp;
 		if (!force) {
 			warp = warpsRepositories.get(name);
@@ -53,5 +63,13 @@ public class WarpManager {
 			throw new WarperException("This warp does not exist");
 		}
 		warpsRepositories.remove(warp);
+	}
+
+	public Warp getWarp(String warpName) throws WarpNotFoundException {
+		var warp = warpsRepositories.get(warpName);
+		if (warp == null) {
+			throw new WarpNotFoundException();
+		}
+		return warp;
 	}
 }

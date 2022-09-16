@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import fr.bendertales.mc.talesservercommon.commands.TalesCommandNode;
 import fr.bendertales.mc.taleswarper.WarpManager;
 import fr.bendertales.mc.taleswarper.commands.nodes.CmdTop;
+import fr.bendertales.mc.taleswarper.commands.nodes.CmdWarpInfo;
 import fr.bendertales.mc.taleswarper.commands.nodes.CmdWarpSet;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
@@ -22,7 +23,8 @@ public class CommandRegistrar {
 	private static Stream<TalesCommandNode> buildCommands(WarpManager warpManager) {
 		return Stream.of(
 			new CmdTop(),
-			new CmdWarpSet(warpManager)
+			new CmdWarpSet(warpManager),
+			new CmdWarpInfo(warpManager)
 		);
 	}
 }

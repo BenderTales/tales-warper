@@ -2,6 +2,8 @@ package fr.bendertales.mc.taleswarper.data;
 
 import fr.bendertales.mc.talesservercommon.repository.data.HasKey;
 
+import static fr.bendertales.mc.taleswarper.helper.WarpUtils.asKey;
+
 
 public class Warp implements HasKey<String> {
 
@@ -11,7 +13,7 @@ public class Warp implements HasKey<String> {
 
 	@Override
 	public String getKey() {
-		return name;
+		return asKey(name);
 	}
 
 	public String getName() {

@@ -10,7 +10,7 @@ import fr.bendertales.mc.talesservercommon.commands.CommandNodeRequirements;
 import fr.bendertales.mc.talesservercommon.commands.TalesCommand;
 import fr.bendertales.mc.talesservercommon.commands.TalesCommandNode;
 import fr.bendertales.mc.taleswarper.WarpManager;
-import fr.bendertales.mc.taleswarper.data.WarperException;
+import fr.bendertales.mc.taleswarper.exceptions.WarperException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
