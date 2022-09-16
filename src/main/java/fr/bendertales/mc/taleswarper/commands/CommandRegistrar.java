@@ -25,7 +25,9 @@ public class CommandRegistrar {
 			new CmdWarpInfo(warpManager),
 			new CmdWarps(warpManager),
 			new CmdWarpDel(warpManager),
-			new CmdWarp(warpManager)
+			new CmdWarp(warpManager),
+			new CmdTpHere(warpManager),
+			new CmdBack()
 		);
 	}
 }

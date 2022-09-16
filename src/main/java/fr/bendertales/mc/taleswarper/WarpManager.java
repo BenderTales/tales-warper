@@ -81,7 +81,7 @@ public class WarpManager {
 		teleport(player, location);
 	}
 
-	private void teleport(ServerPlayerEntity player, WarpLocation location) {
+	public void teleport(ServerPlayerEntity player, WarpLocation location) {
 		var previousLocation = WarpLocation.from(player);
 
 		FabricDimensions.teleport(player, location.world(), location.asTeleportTarget());
