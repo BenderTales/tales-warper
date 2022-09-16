@@ -1,5 +1,6 @@
 package fr.bendertales.mc.taleswarper;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import fr.bendertales.mc.taleswarper.data.PlayerWarpData;
@@ -88,5 +89,16 @@ public class WarpManager {
 
 		var warpData = playerCache.getOrCreate(player);
 		warpData.addPreviousLocation(previousLocation);
+	}
+
+	public void teleportBack(ServerPlayerEntity player) throws WarperException {
+		var warpData = playerCache.getOrCreate(player);
+		var optPrevLoc = warpData.getPreviousLocation();
+		if (optPrevLoc.isPresent()) {
+			var previousLocation = optPrevLoc.get();
+			FabricDimensions.teleport(player, previousLocation.world(), previousLocation.asTeleportTarget());
+			return;
+		}
+		throw new WarperException("Player has no previous location");
 	}
 }

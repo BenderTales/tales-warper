@@ -15,4 +15,7 @@ public class PlayerWarpData {
 	public Optional<WarpLocation> getPreviousLocation() {
 		return previousLocations.pop();
 	}
+
+	public void popLastLocation() {
+	}
 }
