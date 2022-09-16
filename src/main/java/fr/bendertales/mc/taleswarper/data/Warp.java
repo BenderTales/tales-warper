@@ -1,16 +1,13 @@
 package fr.bendertales.mc.taleswarper.data;
 
 import fr.bendertales.mc.talesservercommon.repository.data.HasKey;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
 
 
 public class Warp implements HasKey<String> {
 
 	private String name;
 	private String creator;
-	private ServerWorld world;
-	private Vec3d position;
+	private WarpLocation warpLocation;
 
 	@Override
 	public String getKey() {
@@ -33,19 +30,11 @@ public class Warp implements HasKey<String> {
 		this.creator = creator;
 	}
 
-	public ServerWorld getWorld() {
-		return world;
+	public WarpLocation getWarpLocation() {
+		return warpLocation;
 	}
 
-	public void setWorld(ServerWorld world) {
-		this.world = world;
-	}
-
-	public Vec3d getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vec3d position) {
-		this.position = position;
+	public void setWarpLocation(WarpLocation warpLocation) {
+		this.warpLocation = warpLocation;
 	}
 }

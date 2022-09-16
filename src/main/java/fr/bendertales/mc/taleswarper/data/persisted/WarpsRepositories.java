@@ -8,6 +8,7 @@ import fr.bendertales.mc.talesservercommon.repository.serialization.CommonSerial
 import fr.bendertales.mc.talesservercommon.repository.serialization.JsonSerializerRegistration;
 import fr.bendertales.mc.taleswarper.ModConstants;
 import fr.bendertales.mc.taleswarper.data.Warp;
+import fr.bendertales.mc.taleswarper.data.WarpLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -47,24 +48,28 @@ public class WarpsRepositories extends AAllFileCachedRepository<String, Warp, Wa
 		var worldKey = RegistryKey.of(Registry.WORLD_KEY, worldId);
 		var world = minecraftServer.getWorld(worldKey);
 
+		var location = new WarpLocation(world, props.getPosition());
+
 		Warp warp = new Warp();
 
 		warp.setName(props.getName());
 		warp.setCreator(props.getCreator());
-		warp.setPosition(props.getPosition());
-		warp.setWorld(world);
+		warp.setWarpLocation(location);
 
 		return warp;
 	}
 
 	@Override
 	protected WarpProperties transformBeforeSave(Warp warp) {
+
+		var warpLocation = warp.getWarpLocation();
+
 		WarpProperties properties = new WarpProperties();
 
 		properties.setName(warp.getName());
 		properties.setCreator(warp.getCreator());
-		properties.setPosition(warp.getPosition());
-		properties.setWorld(warp.getWorld().getRegistryKey().getValue());
+		properties.setPosition(warpLocation.position());
+		properties.setWorld(warpLocation.world().getRegistryKey().getValue());
 
 		return properties;
 	}
